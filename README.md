@@ -6,6 +6,85 @@
 go get github.com/deepankarm/client-go
 ```
 
+### Basic Usage
+
+```go
+package main
+
+import (
+	"fmt"
+
+	"github.com/deepankarm/client-go"
+	"github.com/deepankarm/client-go/docarray"
+	"github.com/deepankarm/client-go/jina"
+)
+
+// Create a Document
+func getDoc(id string) *docarray.DocumentProto {
+	return &docarray.DocumentProto{
+		Id: id,
+		Content: &docarray.DocumentProto_Text{
+			Text: "Hello world. This is a test document with id" + id,
+		},
+	}
+}
+
+// Create a DocumentArray with 3 Documents
+func getDocarray() *docarray.DocumentArrayProto {
+	return &docarray.DocumentArrayProto{
+		Docs: []*docarray.DocumentProto{getDoc("1"), getDoc("2"), getDoc("3")},
+	}
+}
+
+// Create DataRequest with a DocumentArray
+func getDataRequest() *jina.DataRequestProto {
+	return &jina.DataRequestProto{
+		Data: &jina.DataRequestProto_DataContentProto{
+			Documents: &jina.DataRequestProto_DataContentProto_Docs{
+				Docs: getDocarray(),
+			},
+		},
+	}
+}
+
+// Generate `DataRequest`s with random DocumentArrays
+func generateDataRequests() <-chan *jina.DataRequestProto {
+	requests := make(chan *jina.DataRequestProto)
+	go func() {
+		// Generate 10 requests
+		for i := 0; i < 10; i++ {
+			requests <- getDataRequest()
+		}
+		defer close(requests)
+	}()
+	return requests
+}
+
+// Custom OnDone callback
+func OnDone(resp *jina.DataRequestProto) {
+	fmt.Println("Got a successful response!")
+}
+
+// Custom OnError callback
+func OnError(resp *jina.DataRequestProto) {
+	fmt.Println("Got an error in response!")
+}
+
+func main() {
+    // Create a HTTP client (expects a Jina Flow with http protocol running on localhost:12345)
+	HTTPClient, err := client.NewHTTPClient("http://localhost:12345")
+	if err != nil {
+		panic(err)
+	}
+    
+    // Send requests to the Flow
+	HTTPClient.POST(generateDataRequests(), OnDone, OnError, nil)
+}
+
+```
+
+
+
 ### Examples
 
 
