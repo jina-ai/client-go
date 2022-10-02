@@ -30,6 +30,7 @@ func NewGRPCClient(host string) (*GRPCClient, error) {
 
 func (c *GRPCClient) POST(requests <-chan *jina.DataRequestProto, onDone, onError, onAlways CallbackType) error {
 	var wg sync.WaitGroup
+
 	stream, err := c.rpcClient.Call(c.ctx)
 	if err != nil {
 		return err

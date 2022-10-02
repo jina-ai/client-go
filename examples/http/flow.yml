@@ -1,0 +1,9 @@
+jtype: Flow
+with:
+  protocol: http
+  port: 12345
+  env:
+    JINA_LOG_LEVEL: DEBUG
+executors:
+  - name: sentencizer
+    uses: jinahub://Sentencizer

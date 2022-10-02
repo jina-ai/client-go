@@ -11,6 +11,6 @@ go get github.com/deepankarm/client-go
 
 | Example | Comments |
 | :---:   | :---:  |
-| [gRPC](examples/grpc/main.go) | gRPC client example |
+| [gRPC](examples/grpc/README.md) | gRPC client example |
 | [HTTP]() | HTTP client example |
 | [WebSocket]() | WebSocket client example |
