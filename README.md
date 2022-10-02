@@ -17,7 +17,7 @@ go get github.com/deepankarm/client-go
 | DocArray usage | Example usage of DocArray (TODO) |
 
 
-#### Gotchas
+### Gotchas
 
 ##### Directory structure
 
