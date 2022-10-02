@@ -24,7 +24,7 @@ func getDoc(id string) *docarray.DocumentProto {
 	return &docarray.DocumentProto{
 		Id: id,
 		Content: &docarray.DocumentProto_Text{
-			Text: "Hello world. This is a test document with id" + id,
+			Text: "Hello world. This is a test document with id:" + id,
 		},
 	}
 }

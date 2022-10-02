@@ -8,34 +8,44 @@ import (
 	"github.com/deepankarm/client-go/jina"
 )
 
-// Generate random DocumentArrays
-func docs(numDocs int) *jina.DataRequestProto_DataContentProto_Docs {
+// Create a Document
+func getDoc(id string) *docarray.DocumentProto {
+	return &docarray.DocumentProto{
+		Id: id,
+		Content: &docarray.DocumentProto_Text{
+			Text: "Hello world. This is a test document with id:" + id,
+		},
+	}
+}
+
+// Create a DocumentArray with 3 Documents
+func getDocarrays(numDocs int) *docarray.DocumentArrayProto {
 	var docs []*docarray.DocumentProto
 	for i := 0; i < numDocs; i++ {
-		docs = append(docs, &docarray.DocumentProto{
-			Id: fmt.Sprint(i),
-			Content: &docarray.DocumentProto_Text{
-				Text: fmt.Sprintf("Hello world. This is a test document %d", i),
-			},
-		})
+		docs = append(docs, getDoc(fmt.Sprint(i)))
 	}
-	return &jina.DataRequestProto_DataContentProto_Docs{
-		Docs: &docarray.DocumentArrayProto{
-			Docs: docs,
+	return &docarray.DocumentArrayProto{
+		Docs: docs,
+	}
+}
+
+// Create DataRequest with a DocumentArray
+func getDataRequest(numDocs int) *jina.DataRequestProto {
+	return &jina.DataRequestProto{
+		Data: &jina.DataRequestProto_DataContentProto{
+			Documents: &jina.DataRequestProto_DataContentProto_Docs{
+				Docs: getDocarrays(numDocs),
+			},
 		},
 	}
 }
 
 // Generate a stream of requests
-func requestsGen(numRequests int) <-chan *jina.DataRequestProto {
+func generateDataRequests(numRequests int) <-chan *jina.DataRequestProto {
 	requests := make(chan *jina.DataRequestProto)
 	go func() {
 		for i := 0; i < numRequests; i++ {
-			requests <- &jina.DataRequestProto{
-				Data: &jina.DataRequestProto_DataContentProto{
-					Documents: docs(3),
-				},
-			}
+			requests <- getDataRequest(3)
 		}
 		defer close(requests)
 	}()
@@ -64,5 +74,5 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	GRPCClient.POST(requestsGen(5), OnDone, OnError, nil)
+	GRPCClient.POST(generateDataRequests(5), OnDone, OnError, nil)
 }
