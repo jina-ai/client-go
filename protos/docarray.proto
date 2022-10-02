@@ -2,7 +2,7 @@ syntax = "proto3";
 import "google/protobuf/struct.proto";
 
 package docarray;
-option go_package = "github.com/deepankarm/client-go/pkg/docarray";
+option go_package = "github.com/deepankarm/client-go/docarray";
 
 /**
  * Represents a (quantized) dense n-dim array

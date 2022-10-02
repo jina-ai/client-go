@@ -2,9 +2,9 @@ package client
 
 import (
 	"context"
-	"fmt"
+	"sync"
 
-	"github.com/deepankarm/client-go/pkg/jina"
+	"github.com/deepankarm/client-go/jina"
 	"google.golang.org/grpc"
 )
 
@@ -28,7 +28,8 @@ func NewGRPCClient(host string) (*GRPCClient, error) {
 	}, nil
 }
 
-func (c *GRPCClient) POST(requests <-chan jina.DataRequestProto) error {
+func (c *GRPCClient) POST(requests <-chan *jina.DataRequestProto, onDone, onError, onAlways CallbackType) error {
+	var wg sync.WaitGroup
 	stream, err := c.rpcClient.Call(c.ctx)
 	if err != nil {
 		return err
@@ -38,27 +39,34 @@ func (c *GRPCClient) POST(requests <-chan jina.DataRequestProto) error {
 		for {
 			resp, err := stream.Recv()
 			if err != nil {
-				break
+				if onAlways != nil {
+					onAlways(resp)
+				}
+				if onError != nil {
+					onError(resp)
+				}
 			}
-			_ = resp
-			fmt.Println(resp)
-
-			// requests <- *resp
+			if onAlways != nil {
+				onAlways(resp)
+			}
+			if onDone != nil {
+				onDone(resp)
+			}
+			wg.Done()
 		}
 	}()
 
-	func() {
-		for {
-			req, ok := <-requests
-			if !ok {
-				break
-			}
-			if err := stream.Send(&req); err != nil {
-				panic(err)
-			}
+	for {
+		req, ok := <-requests
+		if !ok {
+			break
 		}
-		stream.CloseSend()
-	}()
-
+		if err := stream.Send(req); err != nil {
+			panic(err)
+		}
+		wg.Add(1)
+	}
+	wg.Wait()
+	stream.CloseSend()
 	return nil
 }

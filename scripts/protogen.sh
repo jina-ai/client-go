@@ -2,13 +2,13 @@
 
 # This script is used to generate gRPC client stubs from the proto files.
 
-GO_MODULE="github.com/deepankarm/client-go/pkg"
+GO_MODULE="github.com/deepankarm/client-go"
 DOCARRAY_PROTO="docarray.proto"
-DOCARRAY_DIR="../pkg/docarray"
+DOCARRAY_DIR="../docarray"
 DOCARRAY_PACKAGE="$GO_MODULE/docarray"
 
 JINA_PROTO="jina.proto"
-JINA_DIR="../pkg/jina"
+JINA_DIR="../jina"
 JINA_PACKAGE="$GO_MODULE/jina"
 
 
