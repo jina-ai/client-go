@@ -71,13 +71,13 @@ func OnError(resp *jina.DataRequestProto) {
 }
 
 func main() {
-    // Create a HTTP client (expects a Jina Flow with http protocol running on localhost:12345)
+    	// Create a HTTP client (expects a Jina Flow with http protocol running on localhost:12345)
 	HTTPClient, err := client.NewHTTPClient("http://localhost:12345")
 	if err != nil {
 		panic(err)
 	}
     
-    // Send requests to the Flow
+    	// Send requests to the Flow
 	HTTPClient.POST(generateDataRequests(), OnDone, OnError, nil)
 }
 
