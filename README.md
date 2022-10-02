@@ -14,7 +14,7 @@ go get github.com/deepankarm/client-go
 | [gRPC](examples/grpc/README.md) | Stream requests using gRPC Client |
 | [HTTP](examples/http/README.md) | Stream requests using HTTP Client |
 | [WebSocket](examples/websocket/README.md) | Stream requests using WebSocket Client |
-| [DocArray usage]() | Example usage of DocArray (TODO) |
+| DocArray usage | Example usage of DocArray (TODO) |
 
 
 #### Gotchas
@@ -51,3 +51,4 @@ go get github.com/deepankarm/client-go
 #### Jina version 
 
 TODO
+
