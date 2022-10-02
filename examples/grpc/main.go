@@ -8,6 +8,7 @@ import (
 	"github.com/deepankarm/client-go/jina"
 )
 
+// Generate random DocumentArrays
 func docs(numDocs int) *jina.DataRequestProto_DataContentProto_Docs {
 	var docs []*docarray.DocumentProto
 	for i := 0; i < numDocs; i++ {
@@ -25,6 +26,7 @@ func docs(numDocs int) *jina.DataRequestProto_DataContentProto_Docs {
 	}
 }
 
+// Generate a stream of requests
 func requestsGen(numRequests int) <-chan *jina.DataRequestProto {
 	requests := make(chan *jina.DataRequestProto)
 	go func() {
