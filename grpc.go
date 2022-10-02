@@ -4,7 +4,7 @@ import (
 	"context"
 	"sync"
 
-	"github.com/deepankarm/client-go/jina"
+	"github.com/jina-ai/client-go/jina"
 	"google.golang.org/grpc"
 )
 

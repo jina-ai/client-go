@@ -3,7 +3,7 @@ package jina
 import (
 	"encoding/json"
 
-	docarray "github.com/deepankarm/client-go/docarray"
+	docarray "github.com/jina-ai/client-go/docarray"
 	"google.golang.org/protobuf/encoding/protojson"
 	structpb "google.golang.org/protobuf/types/known/structpb"
 )

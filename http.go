@@ -10,7 +10,7 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/deepankarm/client-go/jina"
+	"github.com/jina-ai/client-go/jina"
 )
 
 type HTTPClient struct {

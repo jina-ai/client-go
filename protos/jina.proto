@@ -5,7 +5,7 @@ import "google/protobuf/empty.proto";
 import "docarray.proto";
 
 package jina;
-option go_package = "github.com/deepankarm/client-go/jina";
+option go_package = "github.com/jina-ai/client-go/jina";
 
 /**
  * Represents a the route paths of this message as perceived by the Gateway

@@ -7,8 +7,8 @@ import (
 	"net/url"
 	"sync"
 
-	"github.com/deepankarm/client-go/jina"
 	"github.com/gorilla/websocket"
+	"github.com/jina-ai/client-go/jina"
 )
 
 type WebSocketClient struct {

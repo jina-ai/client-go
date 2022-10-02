@@ -1,7 +1,7 @@
 package client
 
 import (
-	"github.com/deepankarm/client-go/jina"
+	"github.com/jina-ai/client-go/jina"
 )
 
 type CallbackType func(*jina.DataRequestProto)

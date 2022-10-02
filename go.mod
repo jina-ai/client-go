@@ -1,9 +1,8 @@
-module github.com/deepankarm/client-go
+module github.com/jina-ai/client-go
 
 go 1.18
 
 require (
-	github.com/gogo/protobuf v1.3.2
 	github.com/gorilla/websocket v1.5.0
 	google.golang.org/grpc v1.49.0
 	google.golang.org/protobuf v1.28.1

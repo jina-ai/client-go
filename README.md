@@ -3,7 +3,7 @@
 ### Install
 
 ```bash
-go get github.com/deepankarm/client-go
+go get github.com/jina-ai/client-go
 ```
 
 ### Basic Usage
@@ -14,9 +14,9 @@ package main
 import (
 	"fmt"
 
-	"github.com/deepankarm/client-go"
-	"github.com/deepankarm/client-go/docarray"
-	"github.com/deepankarm/client-go/jina"
+	"github.com/jina-ai/client-go"
+	"github.com/jina-ai/client-go/docarray"
+	"github.com/jina-ai/client-go/jina"
 )
 
 // Create a Document
