@@ -94,6 +94,7 @@ func main() {
 | [HTTP](examples/http/README.md) | Stream requests using HTTP Client |
 | [WebSocket](examples/websocket/README.md) | Stream requests using WebSocket Client |
 | DocArray usage | Example usage of DocArray (TODO) |
+| Concurrent requests | Send concurrent requests to Jina Gateway (TODO) |
 
 
 ### Gotchas
