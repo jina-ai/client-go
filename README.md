@@ -127,7 +127,7 @@ func main() {
 - `client.go` defines the `Client` interface. This is implemented by `grpc.go`, `http.go` and `websocket.go`.
 
 
-#### Jina version 
+#### Jina Version Compatibility 
 
-TODO
+TBD
 
