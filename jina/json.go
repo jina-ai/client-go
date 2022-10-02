@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 
 	docarray "github.com/deepankarm/client-go/docarray"
+	"google.golang.org/protobuf/encoding/protojson"
 	structpb "google.golang.org/protobuf/types/known/structpb"
 )
 
@@ -51,4 +52,14 @@ func (x *DataRequestProto) UnmarshalJSON(data []byte) error {
 		},
 	}
 	return nil
+}
+
+// Custom JSON marshalling for RouteProto
+func (x *RouteProto) MarshalJSON() ([]byte, error) {
+	return protojson.Marshal(x)
+}
+
+// Custom JSON unmarshalling for RouteProto
+func (x *RouteProto) UnmarshalJSON(data []byte) error {
+	return protojson.Unmarshal(data, x)
 }

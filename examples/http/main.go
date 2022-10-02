@@ -64,5 +64,5 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	HTTPClient.POST(requestsGen(1), OnDone, OnError, nil)
+	HTTPClient.POST(requestsGen(5), OnDone, OnError, nil)
 }

@@ -75,6 +75,7 @@ func (c HTTPClient) POST(requests <-chan *jina.DataRequestProto, onDone, onError
 				onAlways(request)
 			}
 		}
+
 		var res jina.DataRequestProto
 		if err := json.Unmarshal(body, &res); err != nil {
 			fmt.Println("error unmarshalling response", err)
