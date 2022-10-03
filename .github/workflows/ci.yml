@@ -56,10 +56,12 @@ jobs:
           export PATH="$PATH:$GOROOT:$GOPATH:$GOBIN:$HOME/.local/bin"
           bash scripts/protogen.sh
 
-      - name: Run Tests  
+      - name: Run Tests
         run: |
-          go install github.com/onsi/ginkgo/ginkgo@v2
+          go mod tidy -v
+          go install github.com/onsi/ginkgo/v2
           go get github.com/onsi/gomega/...
+          sudo apt install golang-ginkgo-dev
           ginkgo --progress -v .
 
       - name: Commit & Push
