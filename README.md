@@ -133,7 +133,7 @@ func main() {
 
 #### Jina/Docarray Version Compatibility 
 
-Current jina version is mentioned in the [requirements.txt](requirements.txt) file. Every time, there's a PR that bumps the jina version, [Version Update](.github/workflows/ci.yml) workflow 
+Current jina version is mentioned in the [requirements.txt](requirements.txt) file. Every time, there's a PR that bumps the jina version (managed using [Dependabot](.github/dependabot.yml)) , [Version Update](.github/workflows/ci.yml) workflow,
 - Downloads the right protos for jina & docarray.
 - Generates the Golang code from the protos.
 - Runs integration tests.
