@@ -128,10 +128,9 @@ func main() {
 
 - `jina/json.go` and `docarray/json.go` are custom json (un)marshalers for few fields in `jina.proto` and `docarray.proto` respectively. 
 
-- `client.go` defines the `Client` interface. This is implemented by `grpc.go`, `http.go` and `websocket.go`.
+- `client.go` defines the `Client` & `HealthCheckClient` interface. This is implemented by `grpc.go`, `http.go` and `websocket.go`.
 
 
-#### Jina Version Compatibility 
+#### Jina/Docarray Version Compatibility 
 
 TBD
-
