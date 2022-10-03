@@ -46,3 +46,8 @@ jobs:
           export GOBIN=$GOPATH/bin
           export PATH=$PATH:$GOROOT:$GOPATH:$GOBIN
           bash scripts/protogen.sh
+
+      - name: Setup tmate session for debugging
+        if: ${{ failure() }}
+        uses: mxschmitt/action-tmate@v3
+        timeout-minutes: 60
