@@ -45,6 +45,7 @@ func NewGRPCClient(host string) (*GRPCClient, error) {
 	host, dialOptions := getHostAndDialOptions(host)
 	conn, err := grpc.Dial(host, dialOptions)
 	if err != nil {
+		fmt.Println("Error in grpc dial", err)
 		return nil, err
 	}
 	return &GRPCClient{
@@ -55,7 +56,7 @@ func NewGRPCClient(host string) (*GRPCClient, error) {
 	}, nil
 }
 
-func (c *GRPCClient) POST(requests <-chan *jina.DataRequestProto, onDone, onError, onAlways CallbackType) error {
+func (c GRPCClient) POST(requests <-chan *jina.DataRequestProto, onDone, onError, onAlways CallbackType) error {
 	var wg sync.WaitGroup
 
 	stream, err := c.rpcClient.Call(c.ctx)
@@ -66,6 +67,9 @@ func (c *GRPCClient) POST(requests <-chan *jina.DataRequestProto, onDone, onErro
 	go func() {
 		for {
 			resp, err := stream.Recv()
+			if resp == nil {
+				break
+			}
 			if err != nil {
 				if onAlways != nil {
 					onAlways(resp)
@@ -73,12 +77,13 @@ func (c *GRPCClient) POST(requests <-chan *jina.DataRequestProto, onDone, onErro
 				if onError != nil {
 					onError(resp)
 				}
-			}
-			if onAlways != nil {
-				onAlways(resp)
-			}
-			if onDone != nil {
-				onDone(resp)
+			} else {
+				if onAlways != nil {
+					onAlways(resp)
+				}
+				if onDone != nil {
+					onDone(resp)
+				}
 			}
 			wg.Done()
 		}
