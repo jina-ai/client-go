@@ -1,31 +1,32 @@
 package main
 
 import (
-	"context"
+	"flag"
 	"fmt"
 
-	"github.com/jina-ai/client-go/jina"
-	"google.golang.org/grpc"
-	"google.golang.org/protobuf/types/known/emptypb"
+	"github.com/jina-ai/client-go"
 )
 
 func main() {
-	host := "localhost:12345"
-	conn, err := grpc.Dial(host, grpc.WithInsecure())
-	if err != nil {
-		fmt.Println("Gateway", host, "is unhealthy")
-		return
+	host := flag.String("host", "", "host of the gateway")
+	flag.Parse()
+
+	if *host == "" {
+		panic("Please pass a host to check the health of")
 	}
 
-	client := jina.NewJinaGatewayDryRunRPCClient(conn)
-	status, err := client.DryRun(context.Background(), &emptypb.Empty{})
+	hcClient, err := client.NewGRPCHealthCheckClient(*host)
 	if err != nil {
-		fmt.Println("Gateway", host, "is unhealthy")
-		return
+		panic(fmt.Errorf("unsuccessful healthcheck: %w", err))
 	}
-	if status.Code == jina.StatusProto_SUCCESS {
-		fmt.Println("Gateway", host, "is unhealthy")
-		return
+
+	status, err := hcClient.HealthCheck()
+	if err != nil {
+		panic(fmt.Errorf("failed to check health: %w", err))
 	}
-	fmt.Println("Gateway", host, "is unhealthy")
+	if status {
+		fmt.Println("Flow running at", *host, "is healthy!")
+	} else {
+		panic(fmt.Errorf("unsuccessful healthcheck"))
+	}
 }
