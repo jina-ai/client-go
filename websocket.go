@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"net/http"
 	"net/url"
 	"sync"
 
@@ -90,4 +91,28 @@ func (client WebSocketClient) POST(requests <-chan *jina.DataRequestProto, onDon
 	}
 	wg.Wait()
 	return nil
+}
+
+type WebSocketHealthCheckClient struct {
+	Host string
+	ctx  context.Context
+}
+
+func NewWebSocketHealthCheckClient(host string) (WebSocketHealthCheckClient, error) {
+	return WebSocketHealthCheckClient{
+		Host: host,
+		ctx:  context.Background(),
+	}, nil
+}
+
+func (c WebSocketHealthCheckClient) HealthCheck() (bool, error) {
+	httpResp, err := http.Get(c.Host)
+	if err != nil {
+		return false, err
+	}
+	defer httpResp.Body.Close()
+	if httpResp.StatusCode == http.StatusOK {
+		return true, nil
+	}
+	return false, fmt.Errorf("got non 200 status code %d", httpResp.StatusCode)
 }

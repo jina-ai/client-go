@@ -6,6 +6,7 @@ import (
 
 	"github.com/jina-ai/client-go/jina"
 	"google.golang.org/grpc"
+	"google.golang.org/protobuf/types/known/emptypb"
 )
 
 type GRPCClient struct {
@@ -70,4 +71,35 @@ func (c *GRPCClient) POST(requests <-chan *jina.DataRequestProto, onDone, onErro
 	wg.Wait()
 	stream.CloseSend()
 	return nil
+}
+
+type GRPCHealthCheckClient struct {
+	Host      string
+	conn      *grpc.ClientConn
+	rpcClient jina.JinaGatewayDryRunRPCClient
+	ctx       context.Context
+}
+
+func NewGRPCHealthCheckClient(host string) (*GRPCHealthCheckClient, error) {
+	conn, err := grpc.Dial(host, grpc.WithInsecure())
+	if err != nil {
+		return nil, err
+	}
+	return &GRPCHealthCheckClient{
+		Host:      host,
+		conn:      conn,
+		rpcClient: jina.NewJinaGatewayDryRunRPCClient(conn),
+		ctx:       context.Background(),
+	}, nil
+}
+
+func (c *GRPCHealthCheckClient) HealthCheck() (bool, error) {
+	status, err := c.rpcClient.DryRun(c.ctx, &emptypb.Empty{})
+	if err != nil {
+		return false, err
+	}
+	if status.Code == jina.StatusProto_SUCCESS {
+		return true, nil
+	}
+	return false, nil
 }

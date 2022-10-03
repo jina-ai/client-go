@@ -107,3 +107,27 @@ func (c HTTPClient) POST(requests <-chan *jina.DataRequestProto, onDone, onError
 	wg.Wait()
 	return nil
 }
+
+type HTTPHealthCheckClient struct {
+	Host string
+	ctx  context.Context
+}
+
+func NewHTTPHealthCheckClient(host string) (HTTPHealthCheckClient, error) {
+	return HTTPHealthCheckClient{
+		Host: host,
+		ctx:  context.Background(),
+	}, nil
+}
+
+func (c HTTPHealthCheckClient) HealthCheck() (bool, error) {
+	httpResp, err := http.Get(c.Host)
+	if err != nil {
+		return false, err
+	}
+	defer httpResp.Body.Close()
+	if httpResp.StatusCode == http.StatusOK {
+		return true, nil
+	}
+	return false, fmt.Errorf("got non 200 status code %d", httpResp.StatusCode)
+}
