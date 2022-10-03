@@ -26,7 +26,9 @@ jobs:
         run: |
           go mod tidy
           pip install -r requirements.txt
-          sudo apt-get update && sudo apt-get install -y protobuf-compiler
+          sudo apt-get update
+          wget https://github.com/protocolbuffers/protobuf/releases/download/v21.7/protoc-21.7-linux-x86_64.zip
+          unzip protoc-21.7-linux-x86_64.zip -d $HOME/.local
           # https://stackoverflow.com/a/62872353/15683245
           go get -u google.golang.org/protobuf/cmd/protoc-gen-go
           go install google.golang.org/protobuf/cmd/protoc-gen-go
@@ -48,10 +50,10 @@ jobs:
           export GOROOT=/usr/local/go
           export GOPATH=$HOME/go
           export GOBIN=$GOPATH/bin
-          export PATH=$PATH:$GOROOT:$GOPATH:$GOBIN
+          export PATH="$PATH:$GOROOT:$GOPATH:$GOBIN:$HOME/.local/bin"
           bash scripts/protogen.sh
 
       - name: Setup tmate session for debugging
         if: ${{ failure() }}
         uses: mxschmitt/action-tmate@v3
-        timeout-minutes: 60
+        timeout-minutes: 30
