@@ -106,22 +106,22 @@ func main() {
 
 ```bash
 .
-├── client.go                   # Client interface
+├── protos
+│   ├── docarray.proto          # proto file for DocArray
+│   └── jina.proto              # proto file for Jina
 ├── docarray                    # docarray package
 │   ├── docarray.pb.go          # generated from docarray.proto  
 │   └── json.go                 # custom json (un)marshaler for few fields in docarray.proto
-├── grpc.go                     # gRPC client
-├── http.go                     # HTTP client
 ├── jina                        # jina package
 │   ├── jina_grpc.pb.go         # generated from jina.proto
 │   ├── jina.pb.go              # generated from jina.proto
 │   └── json.go                 # custom json (un)marshaler for few fields in jina.proto
-├── protos
-│   ├── docarray.proto          # proto file for DocArray
-│   └── jina.proto              # proto file for Jina
+├── client.go                   # Client interface
+├── grpc.go                     # gRPC client
+├── http.go                     # HTTP client
+└── websocket.go                # WebSocket client
 ├── scripts
 │   └── protogen.sh             # script to Golang code from proto files
-└── websocket.go                # WebSocket client
 ```
 
 - `scripts/protogen.sh` generates the Golang code from the protos. Each proto generates code in a separate package. This is to avoid name clashes.
