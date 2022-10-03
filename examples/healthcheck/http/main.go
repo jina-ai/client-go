@@ -15,7 +15,7 @@ func main() {
 		panic("Please pass a host to check the health of")
 	}
 
-	hcClient, err := client.NewWebSocketHealthCheckClient(*host)
+	hcClient, err := client.NewHTTPHealthCheckClient(*host)
 	if err != nil {
 		panic(fmt.Errorf("unsuccessful healthcheck: %w", err))
 	}
