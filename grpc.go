@@ -71,19 +71,15 @@ func (c GRPCClient) POST(requests <-chan *jina.DataRequestProto, onDone, onError
 				break
 			}
 			if err != nil {
-				if onAlways != nil {
-					onAlways(resp)
-				}
+				fmt.Println("Error in receiving response", err)
 				if onError != nil {
 					onError(resp)
 				}
-			} else {
-				if onAlways != nil {
-					onAlways(resp)
-				}
-				if onDone != nil {
-					onDone(resp)
-				}
+			} else if onDone != nil {
+				onDone(resp)
+			}
+			if onAlways != nil {
+				onAlways(resp)
 			}
 			wg.Done()
 		}
