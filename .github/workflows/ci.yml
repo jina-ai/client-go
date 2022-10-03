@@ -1,6 +1,9 @@
 name: Version Update
 
 on:
+  pull_request_target:
+    paths:
+      - requirements.txt
   pull_request:
     paths:
       - requirements.txt
