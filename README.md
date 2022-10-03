@@ -143,7 +143,7 @@ Once the PR is merged, a release is created with the new Jina version via [Tag &
 
 ---
 
-Another (better) approach for keeping all docarray/jina versions compatible would be,
+Another (better?) approach for keeping all docarray/jina versions compatible would be,
 
 - For all docarray versions, generate the Golang code from the protos under `docarray/v1`, `docarray/v2` packages.
 - For all jina versions, generate the Golang code from the protos under `jina/v1`, `jina/v2` packages.
