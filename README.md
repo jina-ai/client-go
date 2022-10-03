@@ -133,4 +133,16 @@ func main() {
 
 #### Jina/Docarray Version Compatibility 
 
-TBD
+Current jina version is mentioned in the [requirements.txt](requirements.txt) file. Every time, there's a PR that bumps the jina version, [Version Update](.github/workflows/version-update.yml) workflow 
+- Downloads the right protos for jina & docarray.
+- Generates the Golang code from the protos.
+- Runs integration tests.
+- If all tests pass, it commits the latest code into the same branch. 
+
+Once the PR is merged, a release is created with the new Jina version via [Tag & Release](.github/workflows/tag.yml) workflow.
+
+Another (better) approach for keeping all docarray/jina versions compatible would be
+
+- For all docarray versions, generate the Golang code from the protos under `docarray/v1`, `docarray/v2` packages.
+- For all jina versions, generate the Golang code from the protos under `jina/v1`, `jina/v2` packages.
+- Skip re-releasing the client-go package for every jina version, rather user can pick the right version of jina/docarray package.
