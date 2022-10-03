@@ -26,6 +26,7 @@ jobs:
         run: |
           go mod tidy
           pip install -r requirements.txt
+          apt update && apt install -y protobuf-compiler
       
       - name: Get Jina & Docarray Versions
         id: versions
