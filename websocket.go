@@ -21,9 +21,12 @@ type WebSocketClient struct {
 
 func NewWebSocketClient(host string) (*WebSocketClient, error) {
 	var u *url.URL
+	if !strings.HasPrefix(host, "ws") {
+		host = "ws://" + host
+	}
 	u, err := url.Parse(host)
 	if err != nil {
-		u = &url.URL{Scheme: "ws", Host: host, Path: "/ws"}
+		u = &url.URL{Scheme: "ws", Host: host, Path: "/"}
 	}
 	conn, _, err := websocket.DefaultDialer.Dial(u.String(), nil)
 	if err != nil {

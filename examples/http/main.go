@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 
 	"github.com/jina-ai/client-go"
@@ -70,7 +71,14 @@ func OnError(resp *jina.DataRequestProto) {
 }
 
 func main() {
-	HTTPClient, err := client.NewHTTPClient("http://localhost:12345")
+	host := flag.String("host", "", "host of the gateway")
+	flag.Parse()
+
+	if *host == "" {
+		panic("Please pass a host to check the health of")
+	}
+
+	HTTPClient, err := client.NewHTTPClient(*host)
 	if err != nil {
 		panic(err)
 	}

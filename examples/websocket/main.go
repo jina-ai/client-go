@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 
 	"github.com/jina-ai/client-go"
@@ -70,9 +71,16 @@ func OnError(resp *jina.DataRequestProto) {
 }
 
 func main() {
-	WSClient, err := client.NewWebSocketClient("ws://localhost:12345")
+	host := flag.String("host", "", "host of the gateway")
+	flag.Parse()
+
+	if *host == "" {
+		panic("Please pass a host to check the health of")
+	}
+
+	WSClient, err := client.NewWebSocketClient(*host)
 	if err != nil {
-		panic(err)
+		panic(fmt.Errorf("unsuccessful connection: %w", err))
 	}
 	WSClient.POST(generateDataRequests(5), OnDone, OnError, nil)
 }

@@ -9,7 +9,7 @@ jina flow --uses flow.yml
 #### Send `DataRequest`s to the Flow
 
 ```bash
-go run main.go
+go run main.go --host ws://localhost:12345
 ```
 ```text
 Total 3 docs received.
