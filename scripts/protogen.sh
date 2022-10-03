@@ -1,5 +1,7 @@
 #/bin/sh
 
+set -e
+
 # This script is used to generate gRPC client stubs from the proto files.
 
 GO_MODULE="github.com/jina-ai/client-go"
