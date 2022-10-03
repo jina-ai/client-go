@@ -193,3 +193,4 @@ service JinaInfoRPC {
     rpc _status (google.protobuf.Empty) returns (JinaInfoProto) {
     }
 }
+
