@@ -119,9 +119,9 @@ func main() {
 ├── client.go                   # Client interface
 ├── grpc.go                     # gRPC client
 ├── http.go                     # HTTP client
-└── websocket.go                # WebSocket client
+├── websocket.go                # WebSocket client
 ├── scripts
-│   └── protogen.sh             # script to Golang code from proto files
+└   └── protogen.sh             # script to Golang code from proto files
 ```
 
 - `scripts/protogen.sh` generates the Golang code from the protos. Each proto generates code in a separate package. This is to avoid name clashes.
