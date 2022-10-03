@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 # This script fetches the latest protobuf files from the Jina/Docarray repository
 # and copies them to the `protos` directory.
 
