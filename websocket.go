@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
+	"strings"
 	"sync"
 
 	"github.com/gorilla/websocket"
@@ -99,6 +100,12 @@ type WebSocketHealthCheckClient struct {
 }
 
 func NewWebSocketHealthCheckClient(host string) (WebSocketHealthCheckClient, error) {
+	if !strings.HasPrefix(host, "http") {
+		host = "http://" + host
+	}
+	if strings.HasPrefix(host, "ws") {
+		host = strings.Replace(host, "ws", "http", 1)
+	}
 	return WebSocketHealthCheckClient{
 		Host: host,
 		ctx:  context.Background(),

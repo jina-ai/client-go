@@ -114,6 +114,9 @@ type HTTPHealthCheckClient struct {
 }
 
 func NewHTTPHealthCheckClient(host string) (HTTPHealthCheckClient, error) {
+	if !strings.HasPrefix(host, "http") {
+		host = "http://" + host
+	}
 	return HTTPHealthCheckClient{
 		Host: host,
 		ctx:  context.Background(),
