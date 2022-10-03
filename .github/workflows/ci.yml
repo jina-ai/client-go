@@ -24,7 +24,7 @@ jobs:
       
       - name: Install Dependencies
         run: |
-          go mod tidy
+          go mod tidy -v
           pip install -r requirements.txt
           sudo apt-get update
           
@@ -55,6 +55,12 @@ jobs:
           export GOBIN=$GOPATH/bin
           export PATH="$PATH:$GOROOT:$GOPATH:$GOBIN:$HOME/.local/bin"
           bash scripts/protogen.sh
+
+      - name: Run Tests  
+        run: |
+          go install github.com/onsi/ginkgo/ginkgo@v2
+          go get github.com/onsi/gomega/...
+          ginkgo --progress -v .
 
       - name: Commit & Push
         uses: stefanzweifel/git-auto-commit-action@v4
