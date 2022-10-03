@@ -1,6 +1,7 @@
 name: Tag & Release
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
@@ -32,6 +33,6 @@ jobs:
       - name: Create a GitHub release
         uses: ncipollo/release-action@v1
         with:
-          tag: ${{ steps.versions.outputs.JINA_VERSION }}
-          name: Release ${{ steps.versions.outputs.JINA_VERSION }}
-          body: Automated release for jina ${{ steps.versions.outputs.JINA_VERSION }} with docarray ${{ steps.versions.outputs.DOCARRAY_VERSION }}
+          tag: "v${{ steps.versions.outputs.JINA_VERSION }}"
+          name: "Release v${{ steps.versions.outputs.JINA_VERSION }}"
+          body: "Automated release for jina v${{ steps.versions.outputs.JINA_VERSION }} with docarray v${{ steps.versions.outputs.DOCARRAY_VERSION }}"
