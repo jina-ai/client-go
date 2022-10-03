@@ -90,12 +90,12 @@ func main() {
 
 | Example |  |
 | :---   | ---:  |
-| [gRPC](examples/grpc/README.md) | Stream requests using gRPC Client |
-| [HTTP](examples/http/README.md) | Stream requests using HTTP Client |
-| [WebSocket](examples/websocket/README.md) | Stream requests using WebSocket Client |
-| [gRPC Healthcheck](examples/healthcheck/grpc/README.md) | Check if the gRPC Flow is healthy |
-| [HTTP Healthcheck](examples/healthcheck/http/README.md) | Check if the  HTTP Flow is healthy |
-| [WebSocket Healthcheck](examples/healthcheck/websocket/README.md) | Check if the WebSocket Flow is healthy |
+| [gRPC](examples/grpc/) | Stream requests using gRPC Client |
+| [HTTP](examples/http/) | Stream requests using HTTP Client |
+| [WebSocket](examples/websocket/) | Stream requests using WebSocket Client |
+| [gRPC Healthcheck](examples/healthcheck/grpc/) | Check if the gRPC Flow is healthy |
+| [HTTP Healthcheck](examples/healthcheck/http/) | Check if the  HTTP Flow is healthy |
+| [WebSocket Healthcheck](examples/healthcheck/websocket/) | Check if the WebSocket Flow is healthy |
 | DocArray usage | Example usage of DocArray (TODO) |
 | Concurrent requests | Send concurrent requests to Jina Gateway (TODO) |
 
