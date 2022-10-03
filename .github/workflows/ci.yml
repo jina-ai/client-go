@@ -26,6 +26,17 @@ jobs:
         run: |
           go mod tidy
           pip install -r requirements.txt
+          sudo apt-get update
+          
+          # https://grpc.io/docs/protoc-installation/#install-pre-compiled-binaries-any-os
+          wget https://github.com/protocolbuffers/protobuf/releases/download/v21.7/protoc-21.7-linux-x86_64.zip
+          unzip protoc-21.7-linux-x86_64.zip -d $HOME/.local
+          
+          # https://stackoverflow.com/a/62872353/15683245
+          go get -u google.golang.org/protobuf/cmd/protoc-gen-go
+          go install google.golang.org/protobuf/cmd/protoc-gen-go
+          go get -u google.golang.org/grpc/cmd/protoc-gen-go-grpc
+          go install google.golang.org/grpc/cmd/protoc-gen-go-grpc
       
       - name: Get Jina & Docarray Versions
         id: versions
@@ -39,4 +50,22 @@ jobs:
 
       - name: Generate Golang Code from protos
         run: |
+          export GOROOT=/usr/local/go
+          export GOPATH=$HOME/go
+          export GOBIN=$GOPATH/bin
+          export PATH="$PATH:$GOROOT:$GOPATH:$GOBIN:$HOME/.local/bin"
           bash scripts/protogen.sh
+
+      - name: Commit & Push
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: "chore: update protos for jina ${{ steps.versions.outputs.JINA_VERSION }} and docarray ${{ steps.versions.outputs.DOCARRAY_VERSION }}"
+          commit_options: "--signoff"
+          branch: ${{ github.head_ref }}
+          commit_user_name: "Jina Dev Bot"
+          commit_user_email: "dev-bot@jina.ai"
+
+      - name: Setup tmate session for debugging
+        if: ${{ failure() }}
+        uses: mxschmitt/action-tmate@v3
+        timeout-minutes: 30
