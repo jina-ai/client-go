@@ -8,6 +8,10 @@ on:
     paths:
       - requirements.txt
 
+concurrency:
+  group: ${{ github.head_ref }}
+  cancel-in-progress: true
+
 jobs:
   version-update:
     runs-on: ubuntu-latest
