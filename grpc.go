@@ -2,10 +2,15 @@ package client
 
 import (
 	"context"
+	"crypto/tls"
+	"fmt"
+	"strings"
 	"sync"
 
 	"github.com/jina-ai/client-go/jina"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials"
+	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/protobuf/types/known/emptypb"
 )
 
@@ -16,8 +21,29 @@ type GRPCClient struct {
 	ctx       context.Context
 }
 
+func getSecureDialOptions() grpc.DialOption {
+	return grpc.WithTransportCredentials(credentials.NewTLS(&tls.Config{InsecureSkipVerify: false}))
+}
+
+func getInsecureDialOptions() grpc.DialOption {
+	return grpc.WithTransportCredentials(insecure.NewCredentials())
+}
+
+func getHostAndDialOptions(host string) (string, grpc.DialOption) {
+	if strings.HasPrefix(host, "grpcs://") {
+		host = strings.TrimPrefix(host, "grpcs://")
+		return fmt.Sprint(host + ":443"), getSecureDialOptions()
+	}
+	if strings.HasPrefix(host, "grpc://") {
+		host = strings.TrimPrefix(host, "grpc://")
+		return host, getInsecureDialOptions()
+	}
+	return host, getInsecureDialOptions()
+}
+
 func NewGRPCClient(host string) (*GRPCClient, error) {
-	conn, err := grpc.Dial(host, grpc.WithInsecure())
+	host, dialOptions := getHostAndDialOptions(host)
+	conn, err := grpc.Dial(host, dialOptions)
 	if err != nil {
 		return nil, err
 	}
@@ -81,7 +107,8 @@ type GRPCHealthCheckClient struct {
 }
 
 func NewGRPCHealthCheckClient(host string) (*GRPCHealthCheckClient, error) {
-	conn, err := grpc.Dial(host, grpc.WithInsecure())
+	host, dialOptions := getHostAndDialOptions(host)
+	conn, err := grpc.Dial(host, dialOptions)
 	if err != nil {
 		return nil, err
 	}
