@@ -1,9 +1,16 @@
 name: Version Update
 
 on:
+  pull_request_target:
+    paths:
+      - requirements.txt
   pull_request:
     paths:
       - requirements.txt
+
+concurrency:
+  group: ${{ github.head_ref }}
+  cancel-in-progress: true
 
 jobs:
   version-update:
@@ -31,6 +38,7 @@ jobs:
           # https://grpc.io/docs/protoc-installation/#install-pre-compiled-binaries-any-os
           wget https://github.com/protocolbuffers/protobuf/releases/download/v21.7/protoc-21.7-linux-x86_64.zip
           unzip protoc-21.7-linux-x86_64.zip -d $HOME/.local
+          rm protoc-21.7-linux-x86_64.zip
           
           # https://stackoverflow.com/a/62872353/15683245
           go get -u google.golang.org/protobuf/cmd/protoc-gen-go
