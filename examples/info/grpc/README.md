@@ -1,6 +1,6 @@
-## Get Info for WebSocket Flow
+## Get Info for gRPC Flow
 
-### Start a Flow with WebSocket protocol
+### Start a Flow with gRPC protocol
 
 ```bash
 jina flow --uses flow.yml
@@ -9,7 +9,7 @@ jina flow --uses flow.yml
 ### Fetch Info
 
 ```bash
-go run main.go --host ws://localhost:12345
+go run main.go --host grpc://localhost:12345
 ```
 ```json
 {
