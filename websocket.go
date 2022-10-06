@@ -1,9 +1,11 @@
 package client
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
 	"net/url"
 	"strings"
@@ -124,4 +126,55 @@ func (c WebSocketHealthCheckClient) HealthCheck() (bool, error) {
 		return true, nil
 	}
 	return false, fmt.Errorf("got non 200 status code %d", httpResp.StatusCode)
+}
+
+type WebSocketInfoClient struct {
+	Host string
+	ctx  context.Context
+}
+
+func NewWebSocketInfoClient(host string) (WebSocketInfoClient, error) {
+	if strings.HasPrefix(host, "ws") {
+		host = strings.Replace(host, "ws", "http", 1)
+	}
+	if !strings.HasPrefix(host, "http") {
+		host = "http://" + host
+	}
+	return WebSocketInfoClient{
+		Host: host,
+		ctx:  context.Background(),
+	}, nil
+}
+
+func (c WebSocketInfoClient) InfoJSON() ([]byte, error) {
+	httpResp, err := http.Get(c.Host + "/status")
+	if err != nil {
+		return nil, err
+	}
+	defer httpResp.Body.Close()
+	if httpResp.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("got non 200 status code %d", httpResp.StatusCode)
+	}
+	body, err := io.ReadAll(httpResp.Body)
+	if err != nil {
+		return nil, err
+	}
+	var buf bytes.Buffer
+	if err := json.Indent(&buf, body, "", "  "); err != nil {
+		return nil, err
+	}
+	return buf.Bytes(), nil
+}
+
+func (c WebSocketInfoClient) Info() (*jina.JinaInfoProto, error) {
+	body, err := c.InfoJSON()
+	if err != nil {
+		return nil, err
+	}
+
+	var res jina.JinaInfoProto
+	if err := json.Unmarshal(body, &res); err != nil {
+		return nil, err
+	}
+	return &res, nil
 }
