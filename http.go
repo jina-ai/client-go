@@ -134,3 +134,51 @@ func (c HTTPHealthCheckClient) HealthCheck() (bool, error) {
 	}
 	return false, fmt.Errorf("got non 200 status code %d", httpResp.StatusCode)
 }
+
+type HTTPInfoClient struct {
+	Host string
+	ctx  context.Context
+}
+
+func NewHTTPInfoClient(host string) (HTTPInfoClient, error) {
+	if !strings.HasPrefix(host, "http") {
+		host = "http://" + host
+	}
+	return HTTPInfoClient{
+		Host: host,
+		ctx:  context.Background(),
+	}, nil
+}
+
+func (c HTTPInfoClient) InfoJSON() ([]byte, error) {
+	httpResp, err := http.Get(c.Host + "/status")
+	if err != nil {
+		return nil, err
+	}
+	defer httpResp.Body.Close()
+	if httpResp.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("got non 200 status code %d", httpResp.StatusCode)
+	}
+	body, err := io.ReadAll(httpResp.Body)
+	if err != nil {
+		return nil, err
+	}
+	var buf bytes.Buffer
+	if err := json.Indent(&buf, body, "", "  "); err != nil {
+		return nil, err
+	}
+	return buf.Bytes(), nil
+}
+
+func (c HTTPInfoClient) Info() (*jina.JinaInfoProto, error) {
+	body, err := c.InfoJSON()
+	if err != nil {
+		return nil, err
+	}
+
+	var res jina.JinaInfoProto
+	if err := json.Unmarshal(body, &res); err != nil {
+		return nil, err
+	}
+	return &res, nil
+}

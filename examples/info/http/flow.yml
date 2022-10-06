@@ -1,0 +1,6 @@
+jtype: Flow
+with:
+  protocol: http
+  port: 12345
+executors:
+  - name: e1
