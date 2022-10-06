@@ -96,6 +96,9 @@ func main() {
 | [gRPC Healthcheck](examples/healthcheck/grpc/) | Check if the gRPC Flow is healthy |
 | [HTTP Healthcheck](examples/healthcheck/http/) | Check if the  HTTP Flow is healthy |
 | [WebSocket Healthcheck](examples/healthcheck/websocket/) | Check if the WebSocket Flow is healthy |
+| [gRPC Info](examples/info/grpc/) | Get info about the gRPC Flow |
+| [HTTP Info](examples/info/http/) | Get info about the HTTP Flow |
+| [WebSocket Info](examples/info/websocket/) | Get info about the WebSocket Flow |
 | DocArray usage | Example usage of DocArray (TODO) |
 | Concurrent requests | Send concurrent requests to Jina Gateway (TODO) |
 
