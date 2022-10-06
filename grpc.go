@@ -3,6 +3,7 @@ package client
 import (
 	"context"
 	"crypto/tls"
+	"encoding/json"
 	"fmt"
 	"strings"
 	"sync"
@@ -130,4 +131,37 @@ func (c *GRPCHealthCheckClient) HealthCheck() (bool, error) {
 		return true, nil
 	}
 	return false, nil
+}
+
+type GRPCInfoClient struct {
+	Host      string
+	conn      *grpc.ClientConn
+	rpcClient jina.JinaInfoRPCClient
+	ctx       context.Context
+}
+
+func NewGRPCInfoClient(host string) (*GRPCInfoClient, error) {
+	host, dialOptions := getHostAndDialOptions(host)
+	conn, err := grpc.Dial(host, dialOptions)
+	if err != nil {
+		return nil, err
+	}
+	return &GRPCInfoClient{
+		Host:      host,
+		conn:      conn,
+		rpcClient: jina.NewJinaInfoRPCClient(conn),
+		ctx:       context.Background(),
+	}, nil
+}
+
+func (c *GRPCInfoClient) Info() (*jina.JinaInfoProto, error) {
+	return c.rpcClient.XStatus(c.ctx, &emptypb.Empty{})
+}
+
+func (c *GRPCInfoClient) InfoJSON() ([]byte, error) {
+	info, err := c.Info()
+	if err != nil {
+		return nil, err
+	}
+	return json.MarshalIndent(info, "", "  ")
 }
