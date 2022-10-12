@@ -103,14 +103,14 @@ type WebSocketHealthCheckClient struct {
 	ctx  context.Context
 }
 
-func NewWebSocketHealthCheckClient(host string) (WebSocketHealthCheckClient, error) {
+func NewWebSocketHealthCheckClient(host string) (*WebSocketHealthCheckClient, error) {
 	if strings.HasPrefix(host, "ws") {
 		host = strings.Replace(host, "ws", "http", 1)
 	}
 	if !strings.HasPrefix(host, "http") {
 		host = "http://" + host
 	}
-	return WebSocketHealthCheckClient{
+	return &WebSocketHealthCheckClient{
 		Host: host,
 		ctx:  context.Background(),
 	}, nil

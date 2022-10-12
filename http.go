@@ -18,11 +18,11 @@ type HTTPClient struct {
 	ctx  context.Context
 }
 
-func NewHTTPClient(host string) (HTTPClient, error) {
+func NewHTTPClient(host string) (*HTTPClient, error) {
 	if !strings.HasSuffix(host, "/post") {
 		host = host + "/post"
 	}
-	return HTTPClient{
+	return &HTTPClient{
 		Host: host,
 		ctx:  context.Background(),
 	}, nil
@@ -113,11 +113,11 @@ type HTTPHealthCheckClient struct {
 	ctx  context.Context
 }
 
-func NewHTTPHealthCheckClient(host string) (HTTPHealthCheckClient, error) {
+func NewHTTPHealthCheckClient(host string) (*HTTPHealthCheckClient, error) {
 	if !strings.HasPrefix(host, "http") {
 		host = "http://" + host
 	}
-	return HTTPHealthCheckClient{
+	return &HTTPHealthCheckClient{
 		Host: host,
 		ctx:  context.Background(),
 	}, nil
