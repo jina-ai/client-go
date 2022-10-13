@@ -41,7 +41,7 @@ jobs:
           go mod tidy -v
 
       - name: Run Client Tests
-        run: ginkgo --succinct --progress
+        run: ginkgo --vv --progress
         env:
           ACK_GINKGO_RC: true
           ACK_GINKGO_DEPRECATIONS: 1.16.5
