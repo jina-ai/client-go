@@ -13,12 +13,8 @@ var _ = Describe("Websocket Client", Ordered, func() {
 	var err error
 
 	BeforeEach(func() {
-		flowFunction := startFlow("examples/websocket/flow.yml")
+		startFlow("examples/websocket/flow.yml")
 		time.Sleep(2 * time.Second)
-		DeferCleanup(func() {
-			*c = WebSocketClient{}
-			flowFunction()
-		})
 	})
 
 	Describe("Create the Client and stream requests", func() {
@@ -46,4 +42,9 @@ var _ = Describe("Websocket Client", Ordered, func() {
 			}, 10*time.Second, 1*time.Second).Should(BeTrue())
 		})
 	})
+
+	AfterAll(func() {
+		cleanUp()
+	})
+
 })
