@@ -28,31 +28,31 @@ jobs:
         uses: actions/setup-go@v2
         with:
           go-version: 1.18
-      
+
       - name: Install Dependencies
         run: |
           go mod tidy -v
           pip install -r requirements.txt
           sudo apt-get update
-          
+
           # https://grpc.io/docs/protoc-installation/#install-pre-compiled-binaries-any-os
           wget https://github.com/protocolbuffers/protobuf/releases/download/v21.7/protoc-21.7-linux-x86_64.zip
           unzip protoc-21.7-linux-x86_64.zip -d $HOME/.local
           rm protoc-21.7-linux-x86_64.zip
-          
+
           # https://stackoverflow.com/a/62872353/15683245
           go get -u google.golang.org/protobuf/cmd/protoc-gen-go
           go install google.golang.org/protobuf/cmd/protoc-gen-go
           go get -u google.golang.org/grpc/cmd/protoc-gen-go-grpc
           go install google.golang.org/grpc/cmd/protoc-gen-go-grpc
-      
+
       - name: Get Jina & Docarray Versions
         id: versions
         run: |
           echo "::set-output name=JINA_VERSION::$(jina -v)"
           echo "::set-output name=DOCARRAY_VERSION::$(python -c "import docarray; print(docarray.__version__)")"
 
-      - name: Download proto files 
+      - name: Download proto files
         run: |
           bash scripts/fetchProtos.sh ${{ steps.versions.outputs.JINA_VERSION }} ${{ steps.versions.outputs.DOCARRAY_VERSION }}
 
@@ -62,7 +62,7 @@ jobs:
           export GOPATH=$HOME/go
           export GOBIN=$GOPATH/bin
           export PATH="$PATH:$GOROOT:$GOPATH:$GOBIN:$HOME/.local/bin"
-          bash scripts/protogen.sh
+          bash scripts/protogen.sh ${{ steps.versions.outputs.JINA_VERSION }} ${{ steps.versions.outputs.DOCARRAY_VERSION }}
 
       - name: Run Tests
         run: |
