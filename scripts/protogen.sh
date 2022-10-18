@@ -15,11 +15,13 @@ JINA_PROTO="jina.proto"
 JINA_DIR="../jina"
 JINA_PACKAGE="$GO_MODULE/jina"
 
-mkdir $DOCARRAY_DIR/v$DOCARRAY_VERSION
-mkdir $DOCARRAY_DIR/v$JINA_VERSION
-
 cd protos
+
+mkdir $DOCARRAY_DIR/v$DOCARRAY_VERSION
+mkdir $JINA_DIR/v$JINA_VERSION
+
 grep -q '^option go_package = ' docarray.proto || sed -i '/package docarray;/aoption go_package = "'${DOCARRAY_PACKAGE}'";' docarray.proto
+
 protoc --go_out=${DOCARRAY_DIR}/v${DOCARRAY_VERSION} \
        --go_opt=paths=source_relative \
        --go_opt=M${DOCARRAY_PROTO}=${DOCARRAY_PACKAGE} \
