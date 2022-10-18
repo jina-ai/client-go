@@ -1,4 +1,4 @@
-name: Client Tests
+name: Integration Tests
 
 on:
   pull_request:
@@ -45,16 +45,3 @@ jobs:
         env:
           ACK_GINKGO_RC: true
           ACK_GINKGO_DEPRECATIONS: 1.16.5
-
-  success-all-test:
-    needs: core-tests
-    if: always()
-    runs-on: ubuntu-latest
-    steps:
-      - uses: technote-space/workflow-conclusion-action@v2
-      - name: Check Failure
-        if: env.WORKFLOW_CONCLUSION == 'failure'
-        run: exit 1
-      - name: Success
-        if: ${{ success() }}
-        run: echo "All Done"
