@@ -37,7 +37,6 @@ protoc --go_out=${JINA_DIR}/v${JINA_VERSION} \
        --go_opt=M${JINA_PROTO}=${JINA_PACKAGE} \
        --go-grpc_out=${JINA_DIR}/v${JINA_VERSION} \
        --go-grpc_opt=paths=source_relative \
-       --experimental_allow_proto3_optional \
        ${JINA_PROTO} 
 
 cp $JINA_DIR/json.go $JINA_DIR/v$JINA_VERSION
