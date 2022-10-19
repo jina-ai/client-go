@@ -6,7 +6,7 @@ import (
 
 	"github.com/jina-ai/client-go"
 	"github.com/jina-ai/client-go/docarray"
-	"github.com/jina-ai/client-go/jina"
+	jina "github.com/jina-ai/client-go/jina/v3.9.0"
 )
 
 // Create a Document
