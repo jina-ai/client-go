@@ -71,6 +71,7 @@ func (client WebSocketClient) POST(requests <-chan *jina.DataRequestProto, onDon
 			_, data, err := client.conn.ReadMessage()
 			if err != nil {
 				fmt.Println(err)
+				break
 			}
 			var res jina.DataRequestProto
 			if err := json.Unmarshal(data, &res); err != nil {

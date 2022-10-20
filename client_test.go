@@ -20,28 +20,28 @@ func TestClients(t *testing.T) {
 	RunSpecsWithDefaultAndCustomReporters(t, "Client Suite", []Reporter{})
 }
 
-func execCommand(name string, arg ...string) {
+func execCommand(name string, arg ...string) func() {
 	cmd := exec.Command(name, arg...)
 	if err := cmd.Start(); err != nil {
 		fmt.Println("Error starting command", err)
 	}
-}
-
-func startFlow(path string) {
-	execCommand("jina", "flow", "--uses", filepath.Join(curDir(), path))
-}
-
-func cleanUp() {
-	jina := "jina"
-	processes, _ := process.Pids()
-	for _, element := range processes {
-		pro, _ := process.NewProcess(element)
-		pro_name, _ := pro.Name()
-		if pro_name == jina {
-			pro.Kill()
+	return func() {
+		jina := "jina"
+		processes, _ := process.Pids()
+		for _, element := range processes {
+			pro, _ := process.NewProcess(element)
+			pro_name, _ := pro.Name()
+			if pro_name == jina {
+				pro.Kill()
+			}
 		}
 	}
 }
+
+func startFlow(path string) func() {
+	return execCommand("jina", "flow", "--uses", filepath.Join(curDir(), path))
+}
+
 func curDir() string {
 	_, filename, _, _ := runtime.Caller(1)
 	return filepath.Dir(filename)

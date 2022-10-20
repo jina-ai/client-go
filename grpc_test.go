@@ -13,8 +13,12 @@ var _ = Describe("GRPC Client", Ordered, func() {
 	var err error
 
 	BeforeEach(func() {
-		startFlow("examples/grpc/flow.yml")
+		cleanUp := startFlow("examples/grpc/flow.yml")
 		time.Sleep(2 * time.Second)
+		DeferCleanup(func() {
+			*c = GRPCClient{}
+			cleanUp()
+		})
 	})
 
 	Describe("Create the Client and stream requests", func() {
@@ -41,9 +45,5 @@ var _ = Describe("GRPC Client", Ordered, func() {
 				return status
 			}, 10*time.Second, 1*time.Second).Should(BeTrue())
 		})
-	})
-
-	AfterAll(func() {
-		cleanUp()
 	})
 })
