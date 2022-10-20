@@ -7,24 +7,24 @@ import (
 	. "github.com/onsi/gomega"
 )
 
-var _ = Describe("GRPC Client", Ordered, func() {
-	var c *GRPCClient
-	var hc *GRPCHealthCheckClient
+var _ = Describe("HTTP Client", Ordered, func() {
+	var c *HTTPClient
+	var hc *HTTPHealthCheckClient
 	var err error
 
 	BeforeEach(func() {
-		cleanUp := startFlow("examples/grpc/flow.yml")
+		cleanUp := startFlow("examples/http/flow.yml")
 		time.Sleep(2 * time.Second)
 		DeferCleanup(func() {
-			*c = GRPCClient{}
+			*c = HTTPClient{}
 			cleanUp()
 		})
 	})
 
 	Describe("Create the Client and stream requests", func() {
-		It("should create a new GRPCClient & stream requests", func() {
+		It("should create a new HTTPClient & stream requests", func() {
 			Eventually(func() error {
-				c, err = NewGRPCClient("grpc://localhost:12345")
+				c, err = NewHTTPClient("http://localhost:12345")
 				return err
 			}, 10*time.Second, 1*time.Second).Should(BeNil())
 			Expect(c).NotTo(BeNil())
@@ -33,9 +33,9 @@ var _ = Describe("GRPC Client", Ordered, func() {
 	})
 
 	Describe("Perform healthchecks on the client", func() {
-		It("should create a new GRPCHealthCheckClient & perform a successful healthcheck", func() {
+		It("should create a new HTTPHealthCheckClient & perform a successful healthcheck", func() {
 			Eventually(func() error {
-				hc, err = NewGRPCHealthCheckClient("grpc://localhost:12345")
+				hc, err = NewHTTPHealthCheckClient("http://localhost:12345")
 				return err
 			}, 10*time.Second, 1*time.Second).Should(BeNil())
 			Expect(hc).NotTo(BeNil())

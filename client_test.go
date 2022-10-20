@@ -11,6 +11,7 @@ import (
 	"github.com/jina-ai/client-go/jina"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
+	"github.com/shirou/gopsutil/v3/process"
 )
 
 func TestClients(t *testing.T) {
@@ -23,10 +24,17 @@ func execCommand(name string, arg ...string) func() {
 	cmd := exec.Command(name, arg...)
 	if err := cmd.Start(); err != nil {
 		fmt.Println("Error starting command", err)
-		return nil
 	}
 	return func() {
-		cmd.Process.Kill()
+		jina := "jina"
+		processes, _ := process.Pids()
+		for _, element := range processes {
+			pro, _ := process.NewProcess(element)
+			pro_name, _ := pro.Name()
+			if pro_name == jina {
+				pro.Kill()
+			}
+		}
 	}
 }
 
