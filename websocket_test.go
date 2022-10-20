@@ -14,6 +14,7 @@ var _ = Describe("Websocket Client", Ordered, func() {
 
 	BeforeEach(func() {
 		cleanUp := startFlow("examples/websocket/flow.yml")
+		time.Sleep(2 * time.Second)
 		DeferCleanup(func() {
 			*c = WebSocketClient{}
 			cleanUp()
