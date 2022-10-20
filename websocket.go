@@ -71,6 +71,7 @@ func (client WebSocketClient) POST(requests <-chan *jina.DataRequestProto, onDon
 			_, data, err := client.conn.ReadMessage()
 			if err != nil {
 				fmt.Println(err)
+				break
 			}
 			var res jina.DataRequestProto
 			if err := json.Unmarshal(data, &res); err != nil {
@@ -103,14 +104,14 @@ type WebSocketHealthCheckClient struct {
 	ctx  context.Context
 }
 
-func NewWebSocketHealthCheckClient(host string) (WebSocketHealthCheckClient, error) {
+func NewWebSocketHealthCheckClient(host string) (*WebSocketHealthCheckClient, error) {
 	if strings.HasPrefix(host, "ws") {
 		host = strings.Replace(host, "ws", "http", 1)
 	}
 	if !strings.HasPrefix(host, "http") {
 		host = "http://" + host
 	}
-	return WebSocketHealthCheckClient{
+	return &WebSocketHealthCheckClient{
 		Host: host,
 		ctx:  context.Background(),
 	}, nil
