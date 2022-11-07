@@ -118,7 +118,7 @@ func NewWebSocketHealthCheckClient(host string) (*WebSocketHealthCheckClient, er
 }
 
 func (c WebSocketHealthCheckClient) HealthCheck() (bool, error) {
-	httpResp, err := http.Get(c.Host)
+	httpResp, err := http.Get(c.Host + "/dry_run")
 	if err != nil {
 		return false, err
 	}
