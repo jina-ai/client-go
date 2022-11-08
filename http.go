@@ -117,6 +117,10 @@ func NewHTTPHealthCheckClient(host string) (*HTTPHealthCheckClient, error) {
 	if !strings.HasPrefix(host, "http") {
 		host = "http://" + host
 	}
+
+	if !strings.HasSuffix(host, "/dry_run") {
+		host = host + "/dry_run"
+	}
 	return &HTTPHealthCheckClient{
 		Host: host,
 		ctx:  context.Background(),
@@ -128,11 +132,22 @@ func (c HTTPHealthCheckClient) HealthCheck() (bool, error) {
 	if err != nil {
 		return false, err
 	}
+	if httpResp.StatusCode != http.StatusOK {
+		return false, fmt.Errorf("got non 200 status code %d", httpResp.StatusCode)
+	}
 	defer httpResp.Body.Close()
-	if httpResp.StatusCode == http.StatusOK {
+
+	var resp map[string]interface{}
+	if err := json.NewDecoder(httpResp.Body).Decode(&resp); err != nil {
+		return false, fmt.Errorf("error decoding response: %w", err)
+	}
+
+	code := int(resp["code"].(float64))
+	if code != 0 {
+		return false, fmt.Errorf("got non 0 code %s", resp["description"])
+	} else {
 		return true, nil
 	}
-	return false, fmt.Errorf("got non 200 status code %d", httpResp.StatusCode)
 }
 
 type HTTPInfoClient struct {
