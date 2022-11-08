@@ -131,7 +131,7 @@ func NewHTTPHealthCheckClient(host string) (*HTTPHealthCheckClient, error) {
 }
 
 func (c HTTPHealthCheckClient) HealthCheck() (bool, error) {
-	httpResp, err := http.Get(c.Host + "/dry_run")
+	httpResp, err := http.Get(c.Host)
 	if err != nil {
 		return false, err
 	}
