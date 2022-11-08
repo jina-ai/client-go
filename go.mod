@@ -7,6 +7,7 @@ require (
 	github.com/onsi/ginkgo/v2 v2.4.0
 	github.com/onsi/gomega v1.24.0
 	github.com/shirou/gopsutil/v3 v3.22.9
+	github.com/viki-org/dnscache v0.0.0-20130720023526-c70c1f23c5d8
 	google.golang.org/grpc v1.50.1
 	google.golang.org/protobuf v1.28.1
 )
