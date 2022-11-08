@@ -43,7 +43,13 @@ func (c HTTPClient) POST(requests <-chan *jina.DataRequestProto, onDone, onError
 			}
 		}
 
-		httpResp, err := http.Post(c.Host, "application/json", bytes.NewBuffer(reqJSON))
+		req, err := http.NewRequest("POST", c.Host, bytes.NewBuffer(reqJSON))
+		if err != nil {
+			fmt.Println("error creating request", err)
+		}
+		req.Header.Set("Content-Type", "application/json")
+
+		httpResp, err := httpClient.Do(req)
 		if err != nil {
 			fmt.Println("error sending request", err)
 			if onError != nil {
@@ -131,7 +137,13 @@ func NewHTTPHealthCheckClient(host string) (*HTTPHealthCheckClient, error) {
 }
 
 func (c HTTPHealthCheckClient) HealthCheck() (bool, error) {
-	httpResp, err := http.Get(c.Host)
+	req, err := http.NewRequest("GET", c.Host, nil)
+	if err != nil {
+		fmt.Println("Failed to create HTTP request", "host", c.Host, "err", err)
+		return false, err
+	}
+
+	httpResp, err := httpClient.Do(req)
 	if err != nil {
 		return false, err
 	}
@@ -162,6 +174,10 @@ func NewHTTPInfoClient(host string) (HTTPInfoClient, error) {
 	if !strings.HasPrefix(host, "http") {
 		host = "http://" + host
 	}
+
+	if !strings.HasSuffix(host, "/status") {
+		host = host + "/status"
+	}
 	return HTTPInfoClient{
 		Host: host,
 		ctx:  context.Background(),
@@ -169,7 +185,13 @@ func NewHTTPInfoClient(host string) (HTTPInfoClient, error) {
 }
 
 func (c HTTPInfoClient) InfoJSON() ([]byte, error) {
-	httpResp, err := http.Get(c.Host + "/status")
+	req, err := http.NewRequest("GET", c.Host, nil)
+	if err != nil {
+		fmt.Println("Failed to create HTTP request", "host", c.Host, "err", err)
+		return nil, err
+	}
+
+	httpResp, err := httpClient.Do(req)
 	if err != nil {
 		return nil, err
 	}

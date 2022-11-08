@@ -121,7 +121,13 @@ func NewWebSocketHealthCheckClient(host string) (*WebSocketHealthCheckClient, er
 }
 
 func (c WebSocketHealthCheckClient) HealthCheck() (bool, error) {
-	httpResp, err := http.Get(c.Host)
+	req, err := http.NewRequest("GET", c.Host, nil)
+	if err != nil {
+		fmt.Println("Failed to create HTTP request", "host", c.Host, "err", err)
+		return false, err
+	}
+
+	httpResp, err := httpClient.Do(req)
 	if err != nil {
 		return false, err
 	}
@@ -155,6 +161,10 @@ func NewWebSocketInfoClient(host string) (WebSocketInfoClient, error) {
 	if !strings.HasPrefix(host, "http") {
 		host = "http://" + host
 	}
+
+	if !strings.HasSuffix(host, "/status") {
+		host = host + "/status"
+	}
 	return WebSocketInfoClient{
 		Host: host,
 		ctx:  context.Background(),
@@ -162,7 +172,13 @@ func NewWebSocketInfoClient(host string) (WebSocketInfoClient, error) {
 }
 
 func (c WebSocketInfoClient) InfoJSON() ([]byte, error) {
-	httpResp, err := http.Get(c.Host + "/status")
+	req, err := http.NewRequest("GET", c.Host, nil)
+	if err != nil {
+		fmt.Println("Failed to create HTTP request", "host", c.Host, "err", err)
+		return nil, err
+	}
+
+	httpResp, err := httpClient.Do(req)
 	if err != nil {
 		return nil, err
 	}
