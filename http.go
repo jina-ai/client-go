@@ -54,43 +54,46 @@ func (c HTTPClient) POST(requests <-chan *jina.DataRequestProto, onDone, onError
 			}
 		}
 
-		defer httpResp.Body.Close()
-		if httpResp.StatusCode != http.StatusOK {
-			fmt.Println("Got non 200 status code", httpResp.StatusCode)
-			if onError != nil {
-				onError(request)
-			}
-			if onAlways != nil {
-				onAlways(request)
-			}
-		}
+		if httpResp != nil {
+			defer httpResp.Body.Close()
 
-		body, err := io.ReadAll(httpResp.Body)
-		if err != nil {
-			fmt.Println("error reading response body", err)
-			if onError != nil {
-				onError(request)
+			if httpResp.StatusCode != http.StatusOK {
+				fmt.Println("Got non 200 status code", httpResp.StatusCode)
+				if onError != nil {
+					onError(request)
+				}
+				if onAlways != nil {
+					onAlways(request)
+				}
 			}
-			if onAlways != nil {
-				onAlways(request)
-			}
-		}
 
-		var res jina.DataRequestProto
-		if err := json.Unmarshal(body, &res); err != nil {
-			fmt.Println("error unmarshalling response", err)
-			if onError != nil {
-				onError(request)
+			body, err := io.ReadAll(httpResp.Body)
+			if err != nil {
+				fmt.Println("error reading response body", err)
+				if onError != nil {
+					onError(request)
+				}
+				if onAlways != nil {
+					onAlways(request)
+				}
 			}
-			if onAlways != nil {
-				onAlways(request)
-			}
-		} else {
-			if onDone != nil {
-				onDone(&res)
-			}
-			if onAlways != nil {
-				onAlways(&res)
+
+			var res jina.DataRequestProto
+			if err := json.Unmarshal(body, &res); err != nil {
+				fmt.Println("error unmarshalling response", err)
+				if onError != nil {
+					onError(request)
+				}
+				if onAlways != nil {
+					onAlways(request)
+				}
+			} else {
+				if onDone != nil {
+					onDone(&res)
+				}
+				if onAlways != nil {
+					onAlways(&res)
+				}
 			}
 		}
 		wg.Done()
@@ -128,7 +131,7 @@ func NewHTTPHealthCheckClient(host string) (*HTTPHealthCheckClient, error) {
 }
 
 func (c HTTPHealthCheckClient) HealthCheck() (bool, error) {
-	httpResp, err := http.Get(c.Host)
+	httpResp, err := http.Get(c.Host + "/dry_run")
 	if err != nil {
 		return false, err
 	}

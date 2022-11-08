@@ -69,9 +69,12 @@ jobs:
       - name: Run Tests
         run: |
           go mod tidy -v
-          go install github.com/onsi/ginkgo/v2
+          go get github.com/onsi/ginkgo/v2/ginkgo/generators@v2.1.6
+          go get github.com/onsi/ginkgo/v2/ginkgo/internal@v2.1.6
+          go get github.com/onsi/ginkgo/v2/ginkgo/labels@v2.1.6
+          go install github.com/onsi/ginkgo/v2/ginkgo
           go get github.com/onsi/gomega/...
-          sudo apt install golang-ginkgo-dev
+          go mod tidy -v
           ginkgo --progress -v .
 
       - name: Commit & Push
