@@ -184,7 +184,7 @@ func (c WebSocketInfoClient) InfoJSON() ([]byte, error) {
 	}
 	defer httpResp.Body.Close()
 	if httpResp.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("got non 200 status code %d", httpResp.StatusCode)
+		return nil, fmt.Errorf("got non 200 status code: %d", httpResp.StatusCode)
 	}
 	body, err := io.ReadAll(httpResp.Body)
 	if err != nil {
