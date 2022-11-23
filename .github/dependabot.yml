@@ -7,7 +7,7 @@ updates:
     open-pull-requests-limit: 1
     allow:
       - dependency-name: "jina"
-    ignore:
-      # ignore jina patch updates
-      - dependency-name: "jina"
-        update-types: ["version-update:semver-patch"]
+#     ignore:
+#       # ignore jina patch updates
+#       - dependency-name: "jina"
+#         update-types: ["version-update:semver-patch"]
