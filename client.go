@@ -12,7 +12,7 @@ import (
 	"github.com/viki-org/dnscache"
 )
 
-var resolver = dnscache.New(time.Minute)
+var resolver = dnscache.New(10 * time.Second)
 var httpClient *http.Client
 
 type CallbackType func(*jina.DataRequestProto)
@@ -31,9 +31,9 @@ func updateHTTPClient() {
 		Transport: &http.Transport{
 			Proxy:                 http.ProxyFromEnvironment,
 			TLSHandshakeTimeout:   time.Second * 20,
-			ResponseHeaderTimeout: time.Second * 30,
+			ResponseHeaderTimeout: time.Second * 300,
 			IdleConnTimeout:       time.Second * 300,
-			MaxIdleConnsPerHost:   500,
+			MaxIdleConnsPerHost:   50,
 			Dial: func(network string, address string) (net.Conn, error) {
 				separator := strings.LastIndex(address, ":")
 				host := address[:separator]
