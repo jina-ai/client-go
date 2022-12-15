@@ -45,27 +45,6 @@ func NewWebSocketClient(host string) (*WebSocketClient, error) {
 func (client WebSocketClient) POST(requests <-chan *jina.DataRequestProto, onDone, onError, onAlways CallbackType) error {
 	var wg sync.WaitGroup
 
-	handleRequest := func(request *jina.DataRequestProto) {
-		reqJSON, err := json.Marshal(request)
-		if err != nil {
-			if onError != nil {
-				onError(request)
-			}
-			if onAlways != nil {
-				onAlways(request)
-			}
-		}
-
-		err = client.conn.WriteMessage(websocket.TextMessage, reqJSON)
-		if err != nil {
-			if onError != nil {
-				onError(request)
-			}
-			if onAlways != nil {
-				onAlways(request)
-			}
-		}
-	}
 	go func() {
 		for {
 			_, data, err := client.conn.ReadMessage()
@@ -88,14 +67,77 @@ func (client WebSocketClient) POST(requests <-chan *jina.DataRequestProto, onDon
 	}()
 
 	for {
-		req, ok := <-requests
+		request, ok := <-requests
 		if !ok {
 			break
 		}
-		handleRequest(req)
+		reqJSON, err := json.Marshal(request)
+		if err != nil {
+			if onError != nil {
+				onError(request)
+			}
+			if onAlways != nil {
+				onAlways(request)
+			}
+		}
+
+		err = client.conn.WriteMessage(websocket.TextMessage, reqJSON)
+		if err != nil {
+			if onError != nil {
+				onError(request)
+			}
+			if onAlways != nil {
+				onAlways(request)
+			}
+		}
 		wg.Add(1)
 	}
 	wg.Wait()
+	return nil
+}
+
+func (client WebSocketClient) SequentialPOST(requests <-chan *jina.DataRequestProto, onDone, onError, onAlways CallbackType) error {
+	for {
+		request, ok := <-requests
+		if !ok {
+			break
+		}
+		reqJSON, err := json.Marshal(request)
+		if err != nil {
+			if onError != nil {
+				onError(request)
+			}
+			if onAlways != nil {
+				onAlways(request)
+			}
+		}
+
+		err = client.conn.WriteMessage(websocket.TextMessage, reqJSON)
+		if err != nil {
+			if onError != nil {
+				onError(request)
+			}
+			if onAlways != nil {
+				onAlways(request)
+			}
+		}
+
+		_, data, err := client.conn.ReadMessage()
+		if err != nil {
+			fmt.Println(err)
+			break
+		}
+		var res jina.DataRequestProto
+		if err := json.Unmarshal(data, &res); err != nil {
+			// Unsure how to handle OnError here
+			fmt.Println(err)
+		} else if onDone != nil {
+			onDone(&res)
+		}
+		if onAlways != nil {
+			onAlways(&res)
+		}
+	}
 	return nil
 }
 

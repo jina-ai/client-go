@@ -117,6 +117,87 @@ func (c HTTPClient) POST(requests <-chan *jina.DataRequestProto, onDone, onError
 	return nil
 }
 
+func (c HTTPClient) SequentialPOST(requests <-chan *jina.DataRequestProto, onDone, onError, onAlways CallbackType) error {
+	for {
+		request, ok := <-requests
+		if !ok {
+			break
+		}
+
+		reqJSON, err := json.Marshal(request)
+		if err != nil {
+			fmt.Println("error marshalling request", err)
+			if onError != nil {
+				onError(request)
+			}
+			if onAlways != nil {
+				onAlways(request)
+			}
+		}
+
+		req, err := http.NewRequest("POST", c.Host, bytes.NewBuffer(reqJSON))
+		if err != nil {
+			fmt.Println("error creating request", err)
+		}
+		req.Header.Set("Content-Type", "application/json")
+
+		httpResp, err := httpClient.Do(req)
+		if err != nil {
+			fmt.Println("error sending request", err)
+			if onError != nil {
+				onError(request)
+			}
+			if onAlways != nil {
+				onAlways(request)
+			}
+		}
+
+		if httpResp != nil {
+			defer httpResp.Body.Close()
+
+			if httpResp.StatusCode != http.StatusOK {
+				fmt.Println("Got non 200 status code", httpResp.StatusCode)
+				if onError != nil {
+					onError(request)
+				}
+				if onAlways != nil {
+					onAlways(request)
+				}
+			}
+
+			body, err := io.ReadAll(httpResp.Body)
+			if err != nil {
+				fmt.Println("error reading response body", err)
+				if onError != nil {
+					onError(request)
+				}
+				if onAlways != nil {
+					onAlways(request)
+				}
+			}
+
+			var res jina.DataRequestProto
+			if err := json.Unmarshal(body, &res); err != nil {
+				fmt.Println("error unmarshalling response", err)
+				if onError != nil {
+					onError(request)
+				}
+				if onAlways != nil {
+					onAlways(request)
+				}
+			} else {
+				if onDone != nil {
+					onDone(&res)
+				}
+				if onAlways != nil {
+					onAlways(&res)
+				}
+			}
+		}
+	}
+	return nil
+}
+
 type HTTPHealthCheckClient struct {
 	Host string
 	ctx  context.Context
