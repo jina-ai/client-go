@@ -101,6 +101,40 @@ func (c GRPCClient) POST(requests <-chan *jina.DataRequestProto, onDone, onError
 	return nil
 }
 
+func (c GRPCClient) SequentialPOST(requests <-chan *jina.DataRequestProto, onDone, onError, onAlways CallbackType) error {
+	stream, err := c.rpcClient.Call(c.ctx)
+	if err != nil {
+		return err
+	}
+
+	for {
+		req, ok := <-requests
+		if !ok {
+			break
+		}
+		if err := stream.Send(req); err != nil {
+			panic(err)
+		}
+		resp, err := stream.Recv()
+		if resp == nil {
+			break
+		}
+		if err != nil {
+			fmt.Println("Error in receiving response", err)
+			if onError != nil {
+				onError(resp)
+			}
+		} else if onDone != nil {
+			onDone(resp)
+		}
+		if onAlways != nil {
+			onAlways(resp)
+		}
+	}
+	stream.CloseSend()
+	return nil
+}
+
 type GRPCHealthCheckClient struct {
 	Host      string
 	conn      *grpc.ClientConn
