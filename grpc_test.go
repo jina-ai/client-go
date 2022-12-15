@@ -32,6 +32,17 @@ var _ = Describe("GRPC Client", Ordered, func() {
 		})
 	})
 
+	Describe("Create the Client and stream requests sequentially", func() {
+		It("should create a new GRPCClient & stream requests", func() {
+			Eventually(func() error {
+				c, err = NewGRPCClient("grpc://localhost:12345")
+				return err
+			}, 10*time.Second, 1*time.Second).Should(BeNil())
+			Expect(c).NotTo(BeNil())
+			c.SequentialPOST(generateDataRequests(3), OnDone, OnError, nil)
+		})
+	})
+
 	Describe("Perform healthchecks on the client", func() {
 		It("should create a new GRPCHealthCheckClient & perform a successful healthcheck", func() {
 			Eventually(func() error {
