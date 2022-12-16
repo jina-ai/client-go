@@ -169,7 +169,7 @@ func (c WebSocketHealthCheckClient) HealthCheck() (bool, error) {
 		return false, err
 	}
 
-	httpResp, err := httpClient.Do(req)
+	httpResp, err := HttpClient.Do(req)
 	if err != nil {
 		return false, err
 	}
@@ -220,7 +220,7 @@ func (c WebSocketInfoClient) InfoJSON() ([]byte, error) {
 		return nil, err
 	}
 
-	httpResp, err := httpClient.Do(req)
+	httpResp, err := HttpClient.Do(req)
 	if err != nil {
 		return nil, err
 	}
