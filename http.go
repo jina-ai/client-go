@@ -49,7 +49,7 @@ func (c HTTPClient) POST(requests <-chan *jina.DataRequestProto, onDone, onError
 		}
 		req.Header.Set("Content-Type", "application/json")
 
-		httpResp, err := httpClient.Do(req)
+		httpResp, err := HttpClient.Do(req)
 		if err != nil {
 			fmt.Println("error sending request", err)
 			if onError != nil {
@@ -141,7 +141,7 @@ func (c HTTPClient) SequentialPOST(requests <-chan *jina.DataRequestProto, onDon
 		}
 		req.Header.Set("Content-Type", "application/json")
 
-		httpResp, err := httpClient.Do(req)
+		httpResp, err := HttpClient.Do(req)
 		if err != nil {
 			fmt.Println("error sending request", err)
 			if onError != nil {
@@ -224,7 +224,7 @@ func (c HTTPHealthCheckClient) HealthCheck() (bool, error) {
 		return false, err
 	}
 
-	httpResp, err := httpClient.Do(req)
+	httpResp, err := HttpClient.Do(req)
 	if err != nil {
 		return false, err
 	}
@@ -272,7 +272,7 @@ func (c HTTPInfoClient) InfoJSON() ([]byte, error) {
 		return nil, err
 	}
 
-	httpResp, err := httpClient.Do(req)
+	httpResp, err := HttpClient.Do(req)
 	if err != nil {
 		return nil, err
 	}

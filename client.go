@@ -12,8 +12,8 @@ import (
 	"github.com/viki-org/dnscache"
 )
 
-var resolver = dnscache.New(10 * time.Second)
-var httpClient *http.Client
+var Resolver = dnscache.New(10 * time.Second)
+var HttpClient *http.Client
 
 type CallbackType func(*jina.DataRequestProto)
 
@@ -28,7 +28,7 @@ type HealthCheckClient interface {
 
 // Clint & resolver taken from https://github.com/juicedata/juicefs/blob/main/pkg/object/restful.go
 func updateHTTPClient() {
-	httpClient = &http.Client{
+	HttpClient = &http.Client{
 		Transport: &http.Transport{
 			Proxy:                 http.ProxyFromEnvironment,
 			TLSHandshakeTimeout:   time.Second * 20,
@@ -39,7 +39,7 @@ func updateHTTPClient() {
 				separator := strings.LastIndex(address, ":")
 				host := address[:separator]
 				port := address[separator:]
-				ips, err := resolver.Fetch(host)
+				ips, err := Resolver.Fetch(host)
 				if err != nil {
 					return nil, err
 				}
