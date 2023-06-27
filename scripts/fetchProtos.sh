@@ -29,7 +29,7 @@ if [[ $DOCARRAY_VERSION != "v*" ]]; then
 fi
 
 echo "Fetching protos for Jina version $JINA_VERSION"
-wget https://raw.githubusercontent.com/jina-ai/jina/$JINA_VERSION/jina/proto/docarray_v2/jina.proto -O protos/jina.proto
+wget https://raw.githubusercontent.com/jina-ai/jina/$JINA_VERSION/jina/proto/docarray_v1/jina.proto -O protos/jina.proto
 
 echo "Fetching protos for Docarray version $DOCARRAY_VERSION"
 wget https://raw.githubusercontent.com/jina-ai/docarray/$DOCARRAY_VERSION/docarray/proto/docarray.proto -O protos/docarray.proto
