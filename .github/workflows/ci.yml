@@ -35,6 +35,7 @@ jobs:
         run: |
           go mod tidy -v
           pip install -r requirements.txt
+          pip install pydantic==1.10.2
           sudo apt-get update
 
           # https://grpc.io/docs/protoc-installation/#install-pre-compiled-binaries-any-os
