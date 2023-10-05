@@ -8,6 +8,11 @@ on:
     paths:
       - requirements.txt
 
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+
 concurrency:
   group: ${{ github.head_ref }}
   cancel-in-progress: true
