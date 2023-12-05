@@ -5,7 +5,7 @@ go 1.18
 require (
 	github.com/gorilla/websocket v1.5.0
 	github.com/onsi/ginkgo/v2 v2.13.0
-	github.com/onsi/gomega v1.29.0
+	github.com/onsi/gomega v1.30.0
 	github.com/shirou/gopsutil/v3 v3.22.9
 	github.com/viki-org/dnscache v0.0.0-20130720023526-c70c1f23c5d8
 	google.golang.org/grpc v1.50.1
